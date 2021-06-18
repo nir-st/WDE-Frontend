@@ -21,9 +21,49 @@
           Username length should be between 3-8 characters long
         </b-form-invalid-feedback>
         <b-form-invalid-feedback v-if="!$v.form.username.alpha">
-          Username alpha
+          Username should consist letters only
         </b-form-invalid-feedback>
       </b-form-group>
+
+    <b-form-group
+      id="input-group-firstname"
+      label-cols-sm="3"
+      label="First name:"
+      label-for="firstname"
+    >
+      <b-form-input
+        id="firstname"
+        v-model="$v.form.firstname.$model"
+        type="text"
+        :state="validateState('firstname')"
+      ></b-form-input>
+        <b-form-invalid-feedback v-if="!$v.form.firstname.required">
+          First name is required
+        </b-form-invalid-feedback>
+        <b-form-invalid-feedback v-if="!$v.form.firstname.alpha">
+          First name should consist letters only
+        </b-form-invalid-feedback>
+    </b-form-group>
+
+    <b-form-group
+      id="input-group-lastname"
+      label-cols-sm="3"
+      label="Last name:"
+      label-for="lastname"
+    >
+      <b-form-input
+        id="lastname"
+        v-model="$v.form.lastname.$model"
+        type="text"
+        :state="validateState('lastname')"
+      ></b-form-input>
+        <b-form-invalid-feedback v-if="!$v.form.lastname.required">
+          Last name is required
+        </b-form-invalid-feedback>
+        <b-form-invalid-feedback v-if="!$v.form.lastname.alpha">
+          Last name should consist letters only
+        </b-form-invalid-feedback>
+    </b-form-group>
 
       <b-form-group
         id="input-group-country"
@@ -66,6 +106,16 @@
         >
           Have length between 5-10 characters long
         </b-form-invalid-feedback>
+                <b-form-invalid-feedback
+          v-if="$v.form.password.required && !$v.form.password.containsNum"
+        >
+          Contain digits
+        </b-form-invalid-feedback>
+                <b-form-invalid-feedback
+          v-if="$v.form.password.required && !$v.form.password.containsSpecialChar"
+        >
+          Contain a special char
+        </b-form-invalid-feedback>
       </b-form-group>
 
       <b-form-group
@@ -90,6 +140,47 @@
         </b-form-invalid-feedback>
       </b-form-group>
 
+      <b-form-group
+        id="input-group-email"
+        label-cols-sm="3"
+        label="Email:"
+        label-for="email"
+      >
+        <b-form-input
+          id="email"
+          type="text"
+          v-model="$v.form.email.$model"
+          :state="validateState('email')"
+        ></b-form-input>
+        <b-form-invalid-feedback v-if="!$v.form.email.required">
+          Email is required
+        </b-form-invalid-feedback>
+        <b-form-invalid-feedback
+          v-else-if="!$v.form.email.email"
+        >
+          Email address is invalid
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      <b-form-group
+        id="input-group-image_url"
+        label-cols-sm="3"
+        label="Profile Image: (optional)"
+        label-for="image_url"
+      >
+        <b-form-input
+          id="image_url"
+          type="text"
+          v-model="$v.form.image_url.$model"
+          :state="validateState('image_url')"
+        ></b-form-input>
+        <b-form-invalid-feedback
+          v-if="!$v.form.image_url.url"
+        >
+          Please enter the full URL
+        </b-form-invalid-feedback>
+      </b-form-group>
+
       <b-button type="reset" variant="danger">Reset</b-button>
       <b-button
         type="submit"
@@ -103,6 +194,9 @@
         <router-link to="login"> Log in here</router-link>
       </div>
     </b-form>
+
+    <b-modal id="usernameTakenModal" ok-only>That username is alread in use. Please choose a different one.</b-modal>
+
     <b-alert
       class="mt-2"
       v-if="form.submitError"
@@ -127,7 +221,8 @@ import {
   maxLength,
   alpha,
   sameAs,
-  email
+  email,
+  url
 } from "vuelidate/lib/validators";
 
 export default {
@@ -136,12 +231,13 @@ export default {
     return {
       form: {
         username: "",
-        firstName: "",
-        lastName: "",
+        firstname: "",
+        lastname: "",
         country: null,
         password: "",
         confirmedPassword: "",
         email: "",
+        image_url: "",
         submitError: undefined
       },
       countries: [{ value: null, text: "", disabled: true }],
@@ -156,16 +252,33 @@ export default {
         length: (u) => minLength(3)(u) && maxLength(8)(u),
         alpha
       },
+      firstname: {
+        required,
+        alpha
+      },
+      lastname: {
+        required,
+        alpha
+      },
       country: {
         required
       },
       password: {
         required,
-        length: (p) => minLength(5)(p) && maxLength(10)(p)
+        length: (p) => minLength(5)(p) && maxLength(10)(p),
+        containsNum: (p) => /[0-9]/.test(p),
+        containsSpecialChar: (p) => /[!@#$%^&*]/.test(p)
       },
       confirmedPassword: {
         required,
         sameAsPassword: sameAs("password")
+      },
+      email: {
+        required,
+        email
+      },
+      image_url: {
+        url
       }
     }
   },
@@ -182,16 +295,26 @@ export default {
     async Register() {
       try {
         const response = await this.axios.post(
-          "https://test-for-3-2.herokuapp.com/user/Register",
+          "http://localhost:3000/Register",
           {
             username: this.form.username,
-            password: this.form.password
+            firstname: this.form.firstname,
+            lastname: this.form.lastname,
+            country: this.form.country,
+            password: this.form.password,
+            email: this.form.email,
+            image_url: this.form.image_url
           }
         );
-        this.$router.push("/login");
-        // console.log(response);
+        // this.$router.push("/login");
       } catch (err) {
-        console.log(err.response);
+        if (err.response.status == 409) {
+          console.log('username taken!')
+          this.$bvModal.show('usernameTakenModal')
+        }
+        else {
+          console.log(err.response);
+        }
         this.form.submitError = err.response.data.message;
       }
     },
