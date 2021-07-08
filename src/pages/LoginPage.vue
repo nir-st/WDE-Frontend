@@ -128,5 +128,9 @@ export default {
 <style lang="scss" scoped>
 .container {
   max-width: 400px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 15px;
+  font-weight: bold;
+  color: white;
 }
 </style>
