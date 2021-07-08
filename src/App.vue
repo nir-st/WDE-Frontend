@@ -29,6 +29,11 @@
 <script>
 export default {
   name: "App",
+  data() {
+    return {
+      bgImage: "https://images.freeimages.com/images/large-previews/521/soccer-field-1147736.jpg"
+    }
+  },
   methods: {
     async Logout() {
       this.$root.store.logout();
@@ -53,6 +58,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   min-height: 100vh;
+  background-image: url('https://images.freeimages.com/images/large-previews/521/soccer-field-1147736.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 #nav {
