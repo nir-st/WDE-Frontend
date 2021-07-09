@@ -13,13 +13,14 @@
           <b-button variant="success" v-on:click="search">Search</b-button>
         </b-input-group-append>
         <b-input-group-append>
-          <b-form-select v-show="players.length" class='sortBy' v-model="playerSortBy" :options="playerSortByOptions" @change="sortPlayers"></b-form-select>
+          <b-form-select v-show="players.length" class='sortBy' v-model="playersSortBy" :options="playersSortByOptions" @change="sortPlayers"></b-form-select>
         </b-input-group-append>
       </b-input-group>
       <br/>
       </center>
     </div>
     <div class=results>
+      <div class="alert" v-show="foundResults == false"><center><b>No results found!</b></center></div>
       <div v-show="this.players.length">
         <div class=player v-for="player in players" :key=player.id>
           <router-link :to="{name:'player', params:{id: player.id} }">
@@ -64,17 +65,18 @@ export default {
       ],
       players: [],
       teams: [],
-      playerSortByOptions: [
+      playersSortByOptions: [
         { value: 'byName', text: 'Sort by player name'},
         { value: 'byTeamName', text: 'Sort by team name'},
         { value: 'byPositionId', text: 'Sort by player position'}
       ],
-      playerSortBy: 'byName'
+      playersSortBy: 'byName',
+      foundResults: true
     };
   },
   methods: {
     comparePlayers(p1, p2) {
-      if (this.playerSortBy == "byName") {
+      if (this.playersSortBy == "byName") {
         const name1 = p1.fullname.toUpperCase();
         const name2 = p2.fullname.toUpperCase();
         let comparison = 0;
@@ -85,7 +87,7 @@ export default {
         }
         return comparison;
       }
-      else if (this.playerSortBy == "byTeamName") {
+      else if (this.playersSortBy == "byTeamName") {
         const team1 = p1.teamName.toUpperCase();
         const team2 = p2.teamName.toUpperCase();
         let comparison = 0;
@@ -96,7 +98,7 @@ export default {
         }
         return comparison;
       }
-      else if (this.playerSortBy == "byPositionId") {
+      else if (this.playersSortBy == "byPositionId") {
         const pos1 = p1.positionId;
         const pos2 = p2.positionId;
         let comparison = 0;
@@ -117,42 +119,14 @@ export default {
       this.teams = [];
       this.players = [];
       if (this.searchFor == "playersOption") {
-        // const result = await this.axios.get(
-        //   `http://localhost:3000/search/players/${this.searchQuery}`
-        // );
-        // this.players = result.data;
-        this.players = [
-        {
-          fullname: "Jens Gjesing",
-          teamName: "AGF",
-          positionId: 2,
-          image_url: "https://cdn.sportmonks.com/images/soccer/placeholder.png"
-        },
-        {
-          "fullname": "Jens Rinke Kristensen",
-          "teamName": "SønderjyskE",
-          "positionId": 1,
-          "image_url": "https://cdn.sportmonks.com/images/soccer/players/3/84195.png"
-        },
-        {
-          "fullname": "Jens Jakob Thomasen",
-          "teamName": "OB",
-          "positionId": 3,
-          "image_url": "https://cdn.sportmonks.com/images/soccer/players/28/84444.png"
-        },
-        {
-          "fullname": "Jens Stage",
-          "teamName": "København",
-          "positionId": 3,
-          "image_url": "https://cdn.sportmonks.com/images/soccer/players/18/84658.png"
-        },
-        {
-          "fullname": "Jens-Lys Michel Cajuste",
-          "teamName": "Midtjylland",
-          "positionId": 3,
-          "image_url": "https://cdn.sportmonks.com/images/soccer/players/16/194768.png"
+        const result = await this.axios.get(
+          `http://localhost:3000/search/players/${this.searchQuery}`
+        );
+        this.players = result.data;
+        if (this.players == "" || this.players.length == 0) {
+          this.foundResults = false;
         }
-      ]
+        else {this.foundResults = true; }
       }
       else if (this.searchFor == "teamsOption") {
         const result = await this.axios.get(
@@ -160,6 +134,10 @@ export default {
         );
         console.log(result.data);
         this.teams = result.data;
+        if (this.team == "" || this.teams.length == 0) {
+          this.foundResults = false;
+        }
+        else { this.foundResults = true; }
       }
     }
   }
@@ -201,5 +179,11 @@ export default {
 .sortBy {
   width: 100%;
   margin-left: 50px;
+}
+
+.alert {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 18px;
 }
 </style>
