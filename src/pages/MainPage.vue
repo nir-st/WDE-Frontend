@@ -2,7 +2,7 @@
   <div class="container">
     <h1 class="title">Main Page</h1>
     <LoginPage v-if="!$root.store.username"></LoginPage>
-    <FavoriteGames v-else></FavoriteGames>
+    <FavoriteGames v-else games="games"></FavoriteGames>
     <LeagueInfo></LeagueInfo>
   </div>
 </template>

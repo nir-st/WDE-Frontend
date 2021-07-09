@@ -1,16 +1,45 @@
 <template>
-  <div class="game-preview">
-    <div :title="id" class="game-title">
-      <b>Game Id:</b> {{ id }}
-    </div>
-    <ul class="game-content">
-      <li> host: {{ hostTeam }}</li>
-      <li> guest: {{ guestTeam }}</li>
-      <li> date: {{ date }}</li>
-      <li> time: {{ hour }}</li>
-    </ul>
+<div>
+  <table class="table table-dark">
+  <thead>
+    <tr>
+      <th scope="col">Game ID</th>
+      <th scope="col">Home Team</th>
+      <th scope="col">Away Team</th>
+      <th scope="col">Date</th>
+      <th scope="col">Time</th>
+      <th scope="col">Stadium</th>
+      <th scope="col">Referee</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="Fgame in futureGames" :key="Fgame.id">
+      
+      <td>{{game.Id}}</td>
+      <td>
+        <router-link :to="{ name: 'teamPage', params: { queryResults: Fgame.LocalteamId } }" >
+        {{ teamDict[Fgame.LocalteamId] }}
+        </router-link>
+      </td>
+      <td>
+        <router-link :to="{ name: 'teamPage', params: { queryResults: Fgame.VisitorteamId } }" >
+        {{ teamDict[Fgame.VisitorteamId] }}
+        </router-link>
+      </td>
+      <td>{{ Fgame.date.slice(0, 10) }}</td>
+      <td>{{ Fgame.time.slice(11, 16) }}</td>
+      <td>{{ Fgame.stadium }}</td>
+      <td>{{ Fgame.referee }}</td>
+     
+      <div v-if="$root.store.username">
+        <b-button @click="addToFavorites(Fgame.Id)" variant="primary">{{isFavorite(Fgame.Id) ? 'Favorite' : 'Add to Favorites'}}</b-button>
+     </div> 
+    </tr>
+  </tbody>
+</table>
   </div>
 </template>
+
 
 <script>
 export default {
@@ -37,9 +66,7 @@ export default {
         required: true
       }
   }, 
-  mounted(){
-    console.log("game preview mounted")
-  } 
+  
 };
 </script>
 
@@ -70,3 +97,16 @@ export default {
 
 
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+

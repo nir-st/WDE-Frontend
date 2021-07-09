@@ -65,7 +65,6 @@
 
 <script>
 import { required } from "vuelidate/lib/validators";
-
 export default {
   name: "Login",
   data() {
@@ -119,7 +118,6 @@ export default {
       if (this.$v.form.$anyError) {
         return;
       }
-
       this.Login();
     }
   }
@@ -128,5 +126,9 @@ export default {
 <style lang="scss" scoped>
 .container {
   max-width: 400px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 15px;
+  font-weight: bold;
+  color: white;
 }
 </style>
