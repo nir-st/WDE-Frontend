@@ -6,7 +6,7 @@
         <div style="width: 8%;">
           <b-form-select v-model="searchFor" :options="searchOptions"></b-form-select>
         </div>
-        <div style="width: 50%;">
+        <div style="width: 35%;">
           <b-form-input v-model="searchQuery"></b-form-input>
         </div>
         <b-input-group-append>
@@ -15,6 +15,12 @@
         <b-input-group-append>
           <b-form-select v-show="players.length" class='sortBy' v-model="playersSortBy" :options="playersSortByOptions" @change="sortPlayers"></b-form-select>
         </b-input-group-append>
+        <b-input-group-append>
+          <b-form-select v-show="players.length" class='sortBy' v-model="filterTeams" :options="filterTeamsOptions" @change="filterPlayers"></b-form-select>
+        </b-input-group-append>
+        <b-input-group-append>
+          <b-form-select v-show="players.length" class='sortBy' v-model="filterPositions" :options="filterPositionsOptions" @change="filterPlayers"></b-form-select>
+        </b-input-group-append>
       </b-input-group>
       <br/>
       </center>
@@ -22,7 +28,7 @@
     <div class=results>
       <div class="alert" v-show="foundResults == false"><center><b>No results found!</b></center></div>
       <div v-show="this.players.length">
-        <div class=player v-for="player in players" :key=player.id>
+        <div class=player v-for="player in filteredPlayers" :key=player.id>
           <router-link :to="{name:'player', params:{id: player.id} }">
             <PlayerPreview
               :fullname=player.fullname
@@ -71,10 +77,41 @@ export default {
         { value: 'byPositionId', text: 'Sort by player position'}
       ],
       playersSortBy: 'byName',
-      foundResults: true
+      foundResults: true,
+      filterTeams: 'all',
+      filterTeamsOptions: [ { value: 'all', text: 'All Teams' } ],
+      filterPositions: 'all',
+      filterPositionsOptions: [ { value: 'all', text: 'All Positions' } ],
+      filteredPlayers: []
     };
   },
   methods: {
+    updateAvailableFilters() {
+      this.filterTeamsOptions = [ { value: 'all', text: 'All Teams' } ];
+      this.filterPositionsOptions = [ { value: 'all', text: 'All Positions' } ];
+      let pos = [];
+      let teams = [];
+      this.players.forEach((player) => {
+        if (!teams.includes(player.teamName)) {
+          teams.push(player.teamName);
+        }
+        if (!pos.includes(player.positionId)) {
+          pos.push(player.positionId);
+        }
+      });
+      teams.forEach((team) => {
+        this.filterTeamsOptions.push({ value: team, text: team })
+      })
+      pos.forEach((position) => {
+        this.filterPositionsOptions.push({ value: position, text: position })
+      })
+      this.filterTeams = 'all';
+      this.filterPositions = 'all';
+    },
+    filterPlayers() {
+      this.filteredPlayers = this.players.filter((player) => this.filterTeams == 'all' || this.filterTeams == player.teamName)
+      .filter((player) => this.filterPositions == 'all' || this.filterPositions == player.positionId)      
+    },
     comparePlayers(p1, p2) {
       if (this.playersSortBy == "byName") {
         const name1 = p1.fullname.toUpperCase();
@@ -123,10 +160,14 @@ export default {
           `http://localhost:3000/search/players/${this.searchQuery}`
         );
         this.players = result.data;
+        this.filteredPlayers = this.players;
         if (this.players == "" || this.players.length == 0) {
           this.foundResults = false;
         }
-        else {this.foundResults = true; }
+        else { 
+          this.foundResults = true;
+        }
+        this.updateAvailableFilters();
       }
       else if (this.searchFor == "teamsOption") {
         const result = await this.axios.get(
