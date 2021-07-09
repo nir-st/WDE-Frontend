@@ -18,21 +18,23 @@
       <div v-show="this.players">
         <div class=player v-for="player in players" :key="player.id">
           <router-link :to="{name:'player', params:{id: player.id} }">
-          <PlayerPreview
-            :fullname=player.fullname
-            :teamname=player.teamName
-            :imageUrl=player.image_url
-            :position=player.positionId
-          ></PlayerPreview>
+            <PlayerPreview
+              :fullname=player.fullname
+              :teamname=player.teamName
+              :imageUrl=player.image_url
+              :position=player.positionId
+            ></PlayerPreview>
           </router-link>
         </div>
       </div>
       <div v-show="this.teams">
         <div class=team v-for="team in teams" :key="team.id">
-          <TeamPreview
-            :name=team.name
-            :logoPath=team.logoPath
-          ></TeamPreview>
+          <router-link :to="{name:'team', params:{id: team.id} }">
+            <TeamPreview
+              :name=team.name
+              :logoPath=team.logoPath
+            ></TeamPreview>
+          </router-link>
         </div>
       </div>
     </div>
