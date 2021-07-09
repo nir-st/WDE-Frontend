@@ -27,15 +27,25 @@
           </router-link>
         </div>
       </div>
+      <div v-show="this.teams">
+        <div class=team v-for="team in teams" :key="team.id">
+          <TeamPreview
+            :name=team.name
+            :logoPath=team.logoPath
+          ></TeamPreview>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import PlayerPreview from '../components/PlayerPreview.vue';
+import TeamPreview from '../components/TeamPreview.vue';
 export default {
   components: {
-    PlayerPreview
+    PlayerPreview,
+    TeamPreview
   },
   data() {
     return {
@@ -60,10 +70,11 @@ export default {
         this.players = result.data;
       }
       else if (this.searchFor == "teamsOption") {
-        // const result = this.axios.get(
-        //   `http://localhost:3000/search/teams/${this.searchQuery}`
-        // );
-        // this.teams = result.data;
+        const result = await this.axios.get(
+          `http://localhost:3000/search/teams/${this.searchQuery}`
+        );
+        console.log(result.data);
+        this.teams = result.data;
       }
     }
   }
@@ -82,6 +93,18 @@ export default {
 
 .player:hover {
   width: 275px;
+}
+
+.team {
+  margin-left: 30px;
+  margin-right: 30px;
+  margin-top: 40px;
+  width: 220px;
+  float: left;
+}
+
+.team:hover {
+  width: 250px;
 }
 
 .top-bar {
