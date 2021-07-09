@@ -26,7 +26,8 @@ import {
   LayoutPlugin, 
   InputGroupPlugin,
   ModalPlugin,
-  ListGroupPlugin
+  ListGroupPlugin,
+  TabsPlugin
 } from "bootstrap-vue";
 [
   FormGroupPlugin,
@@ -41,7 +42,8 @@ import {
   LayoutPlugin, 
   InputGroupPlugin,
   ModalPlugin,
-  ListGroupPlugin
+  ListGroupPlugin,
+  TabsPlugin
 ].forEach((x) => Vue.use(x));
 Vue.use(Vuelidate);
 
