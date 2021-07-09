@@ -17,12 +17,14 @@
     <div class=results>
       <div v-show="this.players">
         <div class=player v-for="player in players" :key="player.id">
+          <router-link :to="{name:'player', params:{id: player.id} }">
           <PlayerPreview
             :fullname=player.fullname
             :teamname=player.teamName
             :imageUrl=player.image_url
             :position=player.positionId
           ></PlayerPreview>
+          </router-link>
         </div>
       </div>
     </div>
@@ -56,7 +58,6 @@ export default {
           `http://localhost:3000/search/players/${this.searchQuery}`
         );
         this.players = result.data;
-        console.log(result.data);
       }
       else if (this.searchFor == "teamsOption") {
         // const result = this.axios.get(
