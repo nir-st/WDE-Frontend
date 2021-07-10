@@ -91,5 +91,6 @@ h4 {
 .div {
     padding-top: 35px;
     font-size: 18px;
+    color: black;
 }
 </style>

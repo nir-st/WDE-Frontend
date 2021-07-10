@@ -521,6 +521,7 @@ export default {
 <style scoped>
 .div {
     margin-top: 30px;
+    color: black;
 }
 
 .data {
