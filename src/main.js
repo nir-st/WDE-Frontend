@@ -27,7 +27,9 @@ import {
   InputGroupPlugin,
   ModalPlugin,
   ListGroupPlugin,
-  TabsPlugin
+  TabsPlugin,
+  FormCheckboxPlugin,
+  PopoverPlugin
 } from "bootstrap-vue";
 [
   FormGroupPlugin,
@@ -43,7 +45,9 @@ import {
   InputGroupPlugin,
   ModalPlugin,
   ListGroupPlugin,
-  TabsPlugin
+  TabsPlugin,
+  FormCheckboxPlugin,
+  PopoverPlugin
 ].forEach((x) => Vue.use(x));
 Vue.use(Vuelidate);
 
