@@ -6,6 +6,7 @@
         <b-navbar-nav>
 
         <b-nav-item :to="{ name: 'search' }">Search</b-nav-item>
+        <b-nav-item :to="{ name: 'games' }">Games</b-nav-item>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto" v-if="!$root.store.username">
           <b-nav-item :to="{ name: 'login' }">Login</b-nav-item>
@@ -56,7 +57,7 @@ export default {
   // font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: #ffffff;
   min-height: 100vh;
   background-image: url('https://images.freeimages.com/images/large-previews/521/soccer-field-1147736.jpg');
   background-repeat: no-repeat;
