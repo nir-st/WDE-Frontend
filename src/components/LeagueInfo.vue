@@ -16,6 +16,7 @@
       </b-card-text>
       Next game:
       <game-preview
+        v-if="this.nextGame"
         :isPast='false'
         :id="this.nextGame.gameId"
         :hour="this.nextGame.time"
@@ -23,7 +24,8 @@
         :hostTeamId="this.nextGame.homeTeamId"
         :guestTeamId="this.nextGame.awayTeamId"
         :stadium="this.nextGame.stadium"
-        :referee="this.nextGame.referee">
+        :referee="this.nextGame.referee"
+        v-on:favoriteUpdatedEvent="nextGameUpdated">
       </game-preview>
     </b-card>
   </div>
@@ -40,10 +42,14 @@ export default {
       leagueName: "superliga", 
       season: "season", 
       stage: "stage",
-      nextGame: ""
+      nextGame: null
     };
   },
   methods: {
+    nextGameUpdated (){
+      this.$emit('nextGameUpdated');
+      console.log('league info emitting')
+    },
     async getData() {
       try {
         const response = await this.axios.get(

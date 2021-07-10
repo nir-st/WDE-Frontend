@@ -4,11 +4,11 @@
       <br/>
       <br/>
       <div class="left">
-        <LeagueInfo></LeagueInfo>
+        <LeagueInfo v-on:nextGameUpdated="nextGameUpdated"></LeagueInfo>
       </div>
       <div class="right">
         <LoginPage v-if="!$root.store.username"></LoginPage>
-        <FavoriteGames v-else></FavoriteGames>
+        <FavoriteGames ref="fav" v-else></FavoriteGames>
       </div>
     </center>
   </div>
@@ -23,6 +23,11 @@ export default {
     LeagueInfo, 
     LoginPage, 
     FavoriteGames
+  },
+  methods: {
+    nextGameUpdated() {
+      this.$refs.fav.updateGames()
+    }
   }
 };
 </script>
