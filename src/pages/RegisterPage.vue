@@ -306,7 +306,7 @@ export default {
             image_url: this.form.image_url
           }
         );
-        // this.$router.push("/login");
+        this.$router.push("/login");
       } catch (err) {
         if (err.response.status == 409) {
           console.log('username taken!')
