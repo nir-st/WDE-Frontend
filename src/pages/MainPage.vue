@@ -27,7 +27,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .right {
   width: 50%;
   float: right;
