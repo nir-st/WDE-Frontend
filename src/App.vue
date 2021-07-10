@@ -41,6 +41,13 @@ export default {
     async Logout() {
       this.$root.store.logout();
       this.$root.toast("Logout", "User logged out successfully", "success");
+
+      localStorage.removeItem('searchFor');
+      localStorage.removeItem('searchQuery');
+      localStorage.removeItem('players');
+      localStorage.removeItem('teams');
+      localStorage.removeItem('foundResult');
+
       await this.axios.post(
           "http://localhost:3000/logout",
         );
@@ -55,15 +62,18 @@ export default {
 <style lang="scss">
 @import "@/scss/form-style.scss";
 
+html, body {
+  background-image: url('https://images.freeimages.com/images/large-previews/521/soccer-field-1147736.jpg');
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+}
 #app {
   // font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #ffffff;
   min-height: 100vh;
-  background-image: url('https://images.freeimages.com/images/large-previews/521/soccer-field-1147736.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
 }
 
 #nav {

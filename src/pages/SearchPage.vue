@@ -26,9 +26,13 @@
       </center>
     </div>
     <div class=results>
-      <div class="alert" v-show="foundResults == false"><center><b>No results found!</b></center></div>
-      <div v-show="this.players.length">
-        <div class=player v-for="player in filteredPlayers" :key=player.id>
+      <div class="alert" v-show="foundResults == false">
+        <center>
+        <b>No results found!</b>
+        </center>
+      </div>
+      <div v-if="this.players.length">
+        <div class=player v-for="player in filteredPlayers" :key=player.id onload="updateAvailableFilters">
           <router-link :to="{name:'player', params:{id: player.id} }">
             <PlayerPreview
               :fullname=player.fullname
@@ -39,13 +43,13 @@
           </router-link>
         </div>
       </div>
-      <div v-show="this.teams.length">
+      <div v-if="this.teams.length">
         <div class=team v-for="team in teams" :key="team.id">
           <router-link :to="{name:'team', params:{id: team.id} }">
             <TeamPreview
               :name=team.name
-              :logoPath=team.logoPath
-            ></TeamPreview>
+              :logoPath=team.logoPath>
+            </TeamPreview>
           </router-link>
         </div>
       </div>
@@ -61,10 +65,14 @@ export default {
     PlayerPreview,
     TeamPreview
   },
+  mounted() {
+    console.log('mounting search page')
+    this.loadResults()
+  },
   data() {
     return {
-      searchFor:'playersOption',
-      searchQuery:"",
+      searchFor: 'playersOption',
+      searchQuery: "",
       searchOptions: [
         { value: 'playersOption', text: 'Players'},
         { value: 'teamsOption', text: 'Teams'}
@@ -180,6 +188,26 @@ export default {
         }
         else { this.foundResults = true; }
       }
+      this.storeResults()
+    },
+    storeResults() {
+      console.log('storing search results')
+      localStorage.searchFor = this.searchFor;
+      localStorage.searchQuery = this.searchQuery;
+      localStorage.players = JSON.stringify(this.players);
+      localStorage.teams = JSON.stringify(this.teams);
+      localStorage.foundResults = this.foundResults;
+    },
+    loadResults() {
+      if (localStorage.searchFor) { this.searchFor = localStorage.searchFor; }
+      if (localStorage.searchQuery) { this.searchQuery = localStorage.searchQuery; }
+      if (localStorage.players) { this.players = JSON.parse(localStorage.players); }
+      if (localStorage.teams) { this.teams = JSON.parse(localStorage.teams); }
+      if (localStorage.foundResults) { this.foundResults = localStorage.foundResults; }
+      this.filteredPlayers = this.players;
+      this.updateAvailableFilters();
+      console.log(this.teams)
+      console.log(this.players)
     }
   }
 }
@@ -190,13 +218,13 @@ export default {
 .player {
   margin-left: 30px;
   margin-right: 30px;
-  margin-top: 40px;
-  width: 260px;
+  margin-top: 60px;
+  width: 255px;
   float: left;
 }
 
 .player:hover {
-  width: 275px;
+  width: 270px;
 }
 
 .team {
