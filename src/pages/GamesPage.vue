@@ -4,17 +4,32 @@
       <b-card no-body>
         <b-tabs v-model="tabIndex" card align="center">
           <b-tab title="Future Games" :title-link-class="linkClass(0)">
-              <GamePreview v-for="game in futureGames" :key="game.gameId"
-                :id="game.gameId"
-                :hostTeamId="game.homeTeamId"
-                :guestTeamId="game.awayTeamId"
-                :date="game.date"
-                :hour="game.time"
-                :stadium="game.stadium"
-                :referee="game.referee">
-              </GamePreview>
+            <GamePreview v-for="game in futureGames" :key="game.gameId"
+              :isPast="false"
+              :id="game.gameId"
+              :hostTeamId="game.homeTeamId"
+              :guestTeamId="game.awayTeamId"
+              :date="game.date"
+              :hour="game.time"
+              :stadium="game.stadium"
+              :referee="game.referee">
+            </GamePreview>
           </b-tab>
-          <b-tab title="Past Games" :title-link-class="linkClass(1)">all past games here</b-tab>
+          <b-tab title="Past Games" :title-link-class="linkClass(1)">
+            <GamePreview v-for="game in pastGames" :key="game.gameId"
+              :isPast="true"
+              :id="game.gameId"
+              :hostTeamId="game.homeTeamId"
+              :guestTeamId="game.awayTeamId"
+              :date="game.date"
+              :hour="game.time"
+              :stadium="game.stadium"
+              :referee="game.referee"
+              :homeTeamScore="game.homeTeamScore"
+              :awayTeamScore="game.awayTeamScore"
+              :eventLog="game.eventLog">
+            </GamePreview>
+          </b-tab>
         </b-tabs>
       </b-card>
     </div>
@@ -45,7 +60,7 @@ export default {
           `http://localhost:3000/games/allFutureGames`
       );
       const past = await this.axios.get(
-          `http://localhost:3000/games/allFutureGames`
+          `http://localhost:3000/games/allPastGames`
       );
       if (future.data && future.data.length > 0) {
         this.futureGames = future.data;
