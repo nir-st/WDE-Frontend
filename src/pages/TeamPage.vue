@@ -34,12 +34,35 @@
           </b-card-text></b-tab>
           <b-tab title="Past Games"><b-card-text>
             <div style="height:450px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
-              Past games here
+              <GamePreview v-for="game in pastGames" :key="game.gameId"
+                :isPast="true"
+                :id="game.gameId"
+                :hostTeamId="game.homeTeamId"
+                :guestTeamId="game.awayTeamId"
+                :date="game.date"
+                :hour="game.time"
+                :stadium="game.stadium"
+                :referee="game.referee"
+                :homeTeamScore="game.homeTeamScore"
+                :awayTeamScore="game.awayTeamScore"
+                :eventLog="game.eventLog">
+              </GamePreview>
             </div>
           </b-card-text></b-tab>
           <b-tab title="Future Games"><b-card-text>
             <div style="height:450px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
-              Future games here
+              <GamePreview
+                v-for="g in futureGames"
+                :id="g.gameId" 
+                :hostTeamId ="g.HomeTeamId" 
+                :guestTeamId ="g.AwayTeamId" 
+                :date="g.date" 
+                :hour="g.time" 
+                :stadium="g.stadium"
+                :referee="g.referee"
+                :key="g.id"
+                v-on:favoriteUpdatedEvent="updateGames">
+              </GamePreview>
             </div>
           </b-card-text></b-tab>
         </b-tabs>
@@ -51,9 +74,11 @@
 
 <script>
 import PlayerPreview from '../components/PlayerPreview.vue';
+import GamePreview from '../components/GamePreview.vue';
 export default {
   components: {
-      PlayerPreview
+      PlayerPreview,
+      GamePreview
   },
   props: {
     id: Number
@@ -63,7 +88,9 @@ export default {
       name: "",
       founded: "",
       logoPath: "",
-      players: []
+      players: [],
+      pastGames: [],
+      futureGames: []
     }
   },
   methods: {
@@ -75,7 +102,8 @@ export default {
         this.founded = response.data.founded;
         this.logoPath = response.data.logoPath;
         this.players = response.data.players;
-        console.log(response);
+        this.pastGames = response.data.pastGames;
+        this.futureGames = response.data.futureGames;
         // this.name = "Silkeborg";
         // this.logoPath = "https://cdn.sportmonks.com/images//soccer/teams/22/86.png";
         // this.founded = 2000;
