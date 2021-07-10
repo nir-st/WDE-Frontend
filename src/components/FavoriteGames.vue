@@ -1,18 +1,23 @@
 <template>
   <div>
-    <h1>Your upcoming favorite games:</h1>
-    <GamePreview
-      v-for="g in games"
-      :id="g.GameId" 
-      :hostTeamId ="parseInt(g.HomeTeamId)" 
-      :guestTeamId ="parseInt(g.AwayTeamId)" 
-      :date="g.Date" 
-      :hour="g.Time" 
-      :stadium="g.Stadium"
-      :referee="g.Referee"
-      :key="g.id"
-      v-on:favoriteUpdatedEvent="updateGames">
+    <div v-if="this.isEmpty" class="err">
+      <h1>You have no favorite games yet!</h1>
+    </div>
+    <div v-if="!this.isEmpty">
+      <h1>Your upcoming favorite games:</h1>
+      <GamePreview
+        v-for="g in games" 
+        :id="g.GameId" 
+        :hostTeamId ="parseInt(g.HomeTeamId)" 
+        :guestTeamId ="parseInt(g.AwayTeamId)" 
+        :date="g.Date" 
+        :hour="g.Time" 
+        :stadium="g.Stadium"
+        :referee="g.Referee"
+        :key="g.id"
+        v-on:favoriteUpdatedEvent="updateGames">
       </GamePreview>
+    </div>
   </div>
 </template>
 
@@ -27,6 +32,11 @@ export default {
     return {
       games: []
     };
+  },
+  computed: {
+    isEmpty() {
+      return this.games.length == 0;
+    }
   },
   methods: {
     async updateGames(){
