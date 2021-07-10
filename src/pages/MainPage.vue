@@ -1,9 +1,16 @@
 <template>
   <div class="container">
-    <h1 class="title">Main Page</h1>
-    <LoginPage v-if="!$root.store.username"></LoginPage>
-    <FavoriteGames v-else></FavoriteGames>
-    <LeagueInfo></LeagueInfo>
+    <center>
+      <br/>
+      <br/>
+      <div class="left">
+        <LeagueInfo></LeagueInfo>
+      </div>
+      <div class="right">
+        <LoginPage v-if="!$root.store.username"></LoginPage>
+        <FavoriteGames v-else></FavoriteGames>
+      </div>
+    </center>
   </div>
 </template>
 
@@ -21,15 +28,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.RandomRecipes {
-  margin: 10px 0 10px;
+.right {
+  width: 50%;
+  float: right;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 25px;
 }
-.blur {
-  -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
-  filter: blur(2px);
-}
-::v-deep .blur .recipe-preview {
-  pointer-events: none;
-  cursor: default;
+.left {
+  width: 50%;
+  float: left;
 }
 </style>

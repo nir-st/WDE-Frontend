@@ -1,12 +1,15 @@
 <template>
   <div>
+    <h1>Your upcoming favorite games:</h1>
     <GamePreview
       v-for="g in games"
-      :id="g.id" 
-      :hostTeam="g.hostTeam" 
-      :guestTeam="g.guestTeam" 
-      :date="g.date" 
-      :hour="g.hour" 
+      :id="g.GameId" 
+      :hostTeamId ="parseInt(g.HomeTeamId)" 
+      :guestTeamId ="parseInt(g.AwayTeamId)" 
+      :date="g.Date" 
+      :hour="g.Time" 
+      :stadium="g.Stadium"
+      :referee="g.Referee"
       :key="g.id"></GamePreview>
   </div>
 </template>
@@ -20,46 +23,38 @@ export default {
   }, 
   data() {
     return {
-      games: [
-        {
-          id:25,
-          hostTeam: "Maccabi Tel-Aviv",
-          guestTeam: "Hapoel Beer-Sheva",
-          date: "27/5/21",
-          hour: "20:00"
-        },
-        {
-          id:39,
-          hostTeam: "Hapoel Tel-Aviv",
-          guestTeam: "Maccabi Haifa",
-          date: "29/5/21",
-          hour: "20:00"
-        }
-      ]
+      games: []
     };
   },
-  // methods: {
-  //   async updateGames(){
-  //     console.log("response");
-  //     try {
-  //       const response = await this.axios.get(
-  //         "http://localhost:3000/games/favoriteGames",
-  //       );
-  //       const games = response.data.games;
-  //       this.games = [];
-  //       this.games.push(...games);
-  //       console.log(response);
-  //     } catch (error) {
-  //       console.log("error in update games")
-  //       console.log(error);
-  //     }
-  //   }
-  // }, 
-  // mounted(){
-  //   console.log("favorite games mounted");
-  //   this.updateGames(); 
-  // }
+  methods: {
+    async updateGames(){
+      const username = this.$root.store.username;
+      try {
+        const response = await this.axios.get(
+          `http://localhost:3000/users/FavoriteGames/${username}`,
+        );
+        const games = response.data;
+        console.log(response)
+        this.games = [];
+        this.games.push(...games);
+      } catch (error) {
+        console.log("error in update games")
+        console.log(error);
+      }
+    }
+  }, 
+  mounted(){
+    this.updateGames(); 
+  }
 };
 </script>
 
-<style></style>
+<style>
+body, html {
+  color: white;
+}
+h1 {
+  font-size: 28px;
+  color: white;
+}
+</style>

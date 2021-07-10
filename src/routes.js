@@ -33,6 +33,11 @@ const routes = [
     component: () => import("./pages/TeamPage")
   },
   {
+    path: "/games",
+    name: "games",
+    component: () => import("./pages/GamesPage")
+  },
+  {
     path: "*",
     name: "notFound",
     component: NotFound
