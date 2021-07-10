@@ -106,6 +106,7 @@ export default {
         this.$router.push("/");
       } catch (err) {
         console.log(err.response);
+        this.$root.toast("Login failed", "Username or password is incorrect");
         this.form.submitError = err.response.data.message;
       }
     },
