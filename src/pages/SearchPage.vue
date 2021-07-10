@@ -61,10 +61,14 @@ export default {
     PlayerPreview,
     TeamPreview
   },
+  mounted() {
+    console.log('mounting search page')
+    this.loadResults()
+  },
   data() {
     return {
-      searchFor:'playersOption',
-      searchQuery:"",
+      searchFor: 'playersOption',
+      searchQuery: "",
       searchOptions: [
         { value: 'playersOption', text: 'Players'},
         { value: 'teamsOption', text: 'Teams'}
@@ -180,6 +184,22 @@ export default {
         }
         else { this.foundResults = true; }
       }
+      this.storeResults()
+    },
+    storeResults() {
+      console.log('storing search results')
+      localStorage.searchFor = this.searchFor;
+      localStorage.searchQuery = this.searchQuery;
+      localStorage.players = this.players;
+      localStorage.teams = this.teams;
+      localStorage.foundResults = this.foundResults;
+    },
+    loadResults() {
+      if (localStorage.searchFor) { this.searchFor = localStorage.searchFor; }
+      if (localStorage.searchQuery) { this.searchQuery = localStorage.searchQuery; }
+      if (localStorage.players) { this.players = localStorage.players; }
+      if (localStorage.teams) { this.teams = localStorage.teams; }
+      if (localStorage.foundResults) { this.foundResults = localStorage.foundResults; }
     }
   }
 }
