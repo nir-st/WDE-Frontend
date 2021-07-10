@@ -41,6 +41,13 @@ export default {
     async Logout() {
       this.$root.store.logout();
       this.$root.toast("Logout", "User logged out successfully", "success");
+
+      localStorage.removeItem('searchFor');
+      localStorage.removeItem('searchQuery');
+      localStorage.removeItem('players');
+      localStorage.removeItem('teams');
+      localStorage.removeItem('foundResult');
+
       await this.axios.post(
           "http://localhost:3000/logout",
         );
