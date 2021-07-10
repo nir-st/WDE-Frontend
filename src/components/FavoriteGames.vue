@@ -10,7 +10,9 @@
       :hour="g.Time" 
       :stadium="g.Stadium"
       :referee="g.Referee"
-      :key="g.id"></GamePreview>
+      :key="g.id"
+      v-on:favoriteUpdatedEvent="updateGames">
+      </GamePreview>
   </div>
 </template>
 
@@ -20,7 +22,7 @@ export default {
   name: "FavoriteGames",
   components: {
     GamePreview
-  }, 
+  },
   data() {
     return {
       games: []
@@ -34,7 +36,6 @@ export default {
           `http://localhost:3000/users/FavoriteGames/${username}`,
         );
         const games = response.data;
-        console.log(response)
         this.games = [];
         this.games.push(...games);
       } catch (error) {
@@ -44,6 +45,7 @@ export default {
     }
   }, 
   mounted(){
+    console.log('mounting favorite games..')
     this.updateGames(); 
   }
 };
