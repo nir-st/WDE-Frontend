@@ -125,7 +125,6 @@ export default {
       return this.id.toString()
     },
     async update() {
-      console.log(this.$root.store.username)
       if (this.isFavorite == true) {
         console.log('adding to favorites!')
         const res = await this.axios.post(
@@ -135,7 +134,6 @@ export default {
             username: this.$root.store.username
           }
         )
-        console.log(res)
       }
       else {
         console.log('removing from favorites!')
@@ -149,8 +147,9 @@ export default {
             }
           }
         )
-        console.log(res)
       }
+      console.log('game preview emitting')
+      this.$emit('favoriteUpdatedEvent')
     },
     async checkIsFavorite() {
       const username = this.$root.store.username;
